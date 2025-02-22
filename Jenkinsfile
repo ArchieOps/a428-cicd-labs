@@ -10,7 +10,7 @@ node {
                 sh 'pwd'
                 // sh 'ls -la'
                 sh 'npm install'
-                sh 'ls -la'
+                // sh 'ls -la'
             }
         stage('Test') { 
                 sh './jenkins/scripts/test.sh' 
@@ -21,7 +21,7 @@ node {
         stage("deploy"){
             sh 'echo "Deploying to server"'
             withCredentials([sshUserPrivateKey(credentialsId: 'private-key-aws-java-app', keyFileVariable: 'privateKey')]) {
-                sh 'sudo apt-get update && sudo apt-get -y install openssh-client'
+                sh 'apt-get update && apt-get -y install openssh-client'
                 sh 'scp -o StrictHostKeyChecking=no -i $privateKey -r build ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com:/home/ubuntu/react-app'
                 // sh 'ssh -o StrictHostKeyChecking=no -i $privateKey ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com java -jar /home/ubuntu/react-app'
                 sleep (time: 60, unit: 'SECONDS');
