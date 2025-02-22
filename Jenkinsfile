@@ -23,13 +23,13 @@ node {
             withCredentials([sshUserPrivateKey(credentialsId: 'private-key-aws-java-app', keyFileVariable: 'privateKey')]) {
                 sh 'apt-get update && apt-get -y install openssh-client'
                 sh 'sudo scp -o StrictHostKeyChecking=no -i $privateKey -rf build ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com:/var/www/react-app'
-                sh 'sudo ssh -o StrictHostKeyChecking=no -i $privateKey ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com sudo service nginx start'
-                sh 'sudo ssh -o StrictHostKeyChecking=no -i $privateKey ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com sudo systemctl start nginx'
+                sh 'sudo ssh -o StrictHostKeyChecking=no -i $privateKey ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com service nginx start'
+                sh 'sudo ssh -o StrictHostKeyChecking=no -i $privateKey ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com systemctl start nginx'
                 // sh 'sudo ssh -o StrictHostKeyChecking=no -i $privateKey ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com serve /home/ubuntu/react-app/build'
                 sleep (time: 60, unit: 'SECONDS');
                 echo 'Deployed'
-                sh 'sudo ssh -o StrictHostKeyChecking=no -i $privateKey ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com sudo service nginx stop'
-                sh 'sudo ssh -o StrictHostKeyChecking=no -i $privateKey ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com sudo systemctl stop nginx'
+                sh 'sudo ssh -o StrictHostKeyChecking=no -i $privateKey ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com service nginx stop'
+                sh 'sudo ssh -o StrictHostKeyChecking=no -i $privateKey ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com systemctl stop nginx'
             }
         }
     }
