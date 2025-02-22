@@ -26,7 +26,7 @@ node {
                 sh 'scp -o StrictHostKeyChecking=no -i $privateKey -r build ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com:/home/ubuntu/react-app'
                 sleep (time: 60, unit: 'SECONDS');
                 sh './jenkins/scripts/kill.sh'
-                echo 'Deployed to local'
+                echo 'Deployed to EC2'
             }
         }
     }
