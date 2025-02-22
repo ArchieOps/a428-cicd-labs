@@ -10,6 +10,7 @@ node {
                 sh 'pwd'
                 sh 'ls -la'
                 sh 'npm install'
+                sh 'ls -la'
             }
         stage('Test') { 
                 sh './jenkins/scripts/test.sh' 
