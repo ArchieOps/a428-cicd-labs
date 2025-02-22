@@ -21,15 +21,16 @@ node {
         stage("deploy"){
             sh 'echo "Deploying to server"'
             withCredentials([sshUserPrivateKey(credentialsId: 'private-key-aws-java-app', keyFileVariable: 'privateKey')]) {
+                // Deploy to EC2
                 sh 'apt-get update && apt-get -y install openssh-client'
                 sh 'scp -o StrictHostKeyChecking=no -i $privateKey -r build ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com:/home/ubuntu/react-app'
-                // sh 'ssh -o StrictHostKeyChecking=no -i $privateKey ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com service nginx start'
-                // sh 'ssh -o StrictHostKeyChecking=no -i $privateKey ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com systemctl start nginx'
-                sh 'ssh -o StrictHostKeyChecking=no -i $privateKey ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com serve /home/ubuntu/react-app/build'
+                echo 'Deployed EC2 Server'
+
+                // Deploy to Local
+                sh './jenkins/scripts/deliver.sh'
                 sleep (time: 60, unit: 'SECONDS');
-                echo 'Deployed'
-                // sh 'ssh -o StrictHostKeyChecking=no -i $privateKey ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com service nginx stop'
-                // sh 'ssh -o StrictHostKeyChecking=no -i $privateKey ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com systemctl stop nginx'
+                sh './jenkins/scripts/kill.sh'
+                echo 'Deployed to local'
             }
         }
     }
