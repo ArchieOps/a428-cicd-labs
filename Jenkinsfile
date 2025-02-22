@@ -5,7 +5,7 @@ node {
         // Tambahkan stage checkout
         checkout scm
     }
-    docker.image('node:16-buster-slim').inside('-p 3000:3000') {
+    docker.image('node:16-buster-slim').inside('-p 3000:3000 -u root') {
         stage('Build') {
                 sh 'pwd'
                 // sh 'ls -la'
