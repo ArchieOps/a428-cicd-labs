@@ -1,32 +1,28 @@
 //Test cronjob build
 
-// node {
-//     docker.image('node:16-buster-slim').inside('-p 3000:3000') {
-//         stage('Build') {
-//                 sh 'npm install'
-//             }
-//         stage('Test') { 
-//                 sh './jenkins/scripts/test.sh' 
-//         }
-//     }
-// }
-
-pipeline {
-    agent {
-        docker {
-            image 'node:16-buster-slim' 
-            args '-p 3000:3000' 
-        }
+node {
+    stage('Checkout') {
+        // Tambahkan stage checkout
+        checkout scm
     }
-    stages {
-        stage('Build') { 
-            steps {
+    docker.image('node:16-buster-slim').inside('-p 3000:3000') {
+        stage('Build') {
                 sh 'npm install'
             }
+        stage('Test') { 
+                sh './jenkins/scripts/test.sh' 
         }
-         stage('Test') {
-            steps {
-                sh './jenkins/scripts/test.sh'
+        stage('Manual Approval'){
+            input message: 'Lanjutkan ke tahap Deploy?', ok: 'Proceed'
+        }
+        stage("deploy"){
+            sh 'echo "Deploying to server"'
+            withCredentials([sshUserPrivateKey(credentialsId: 'private-key-aws-java-app', keyFileVariable: 'privateKey')]) {
+                // sh 'apt-get update && apt-get -y install openssh-client'
+                // sh 'scp -o StrictHostKeyChecking=no -i $privateKey target/*.jar ubuntu@ec2-18-139-95-243.ap-southeast-1.compute.amazonaws.com:/home/ubuntu/simple-java-maven-app'
+                // sh 'ssh -o StrictHostKeyChecking=no -i $privateKey ubuntu@ec2-18-139-95-243.ap-southeast-1.compute.amazonaws.com java -jar /home/ubuntu/simple-java-maven-app/*.jar'
+                sleep (time: 60, unit: 'SECONDS');
+                echo 'Deployed'
             }
         }
     }
