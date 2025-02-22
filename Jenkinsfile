@@ -24,7 +24,8 @@ node {
                 // Deploy to EC2
                 sh 'apt-get update && apt-get -y install openssh-client'
                 sh './jenkins/scripts/deliver.sh'
-                sh 'scp -o StrictHostKeyChecking=no -i $privateKey -r build ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com:/var/www/react-app'
+                sh 'scp -o StrictHostKeyChecking=no -i $privateKey -r build ubuntu@ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com:/home/ubuntu/react-app'
+                sh 'ssh -o StrictHostKeyChecking=no -i $privateKey -l ubuntu ec2-52-76-233-190.ap-southeast-1.compute.amazonaws.com "sudo cp -r /home/ubuntu/react-app /var/www/react-app"'
                 sleep (time: 60, unit: 'SECONDS');
                 sh './jenkins/scripts/kill.sh'
                 echo 'Deployed to EC2'
